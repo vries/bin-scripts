@@ -1,0 +1,17 @@
+#!/bin/bash
+
+scriptname=$(basename $0)
+
+while [ $# -gt 0 ]; do
+    file="$1"
+    shift
+
+    if [ ! -e "$file" ]; then
+	echo "$scriptname: not a file:" 1>&2
+	exit 1
+    fi
+
+    dir=$(dirname "$file")
+    base=$(basename "$file")
+    echo "$(cd "$dir"; pwd -P)/$base"
+done
