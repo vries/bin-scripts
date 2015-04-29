@@ -1,0 +1,7 @@
+#!/bin/sh
+
+sessions=$(screen -list 2>&1 | grep Detached | awk '{print $1}')
+echo sessions: $sessions
+for session in $sessions; do
+    exec screen -r $session
+done
