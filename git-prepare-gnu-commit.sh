@@ -87,7 +87,7 @@ find_changelog_for_log_hunk ()
 
     for hf in $hunkfiles; do
 	local matches
-	matches=$(grep -c "$hf" "$files")
+	matches=$(grep -c "$hf" "$files" || true)
 	if [ $matches -eq 1 ]; then
 	    local f
 	    f=$(grep "$hf" "$files")
