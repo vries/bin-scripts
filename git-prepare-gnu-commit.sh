@@ -222,7 +222,8 @@ distribute_log ()
     local found_hunk=false
 
     local in_header=true
-    cat "$log" | while IFS='' read line; do
+    exec 3< "$log"
+    while IFS='' read -u 3 line; do
 	if $in_header; then
 	    if [ "$line" = "" ]; then
 		in_header=false
