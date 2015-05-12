@@ -323,7 +323,7 @@ main ()
     local arg="$1"
 
     local range
-    if echo "$range" | grep -q '\.\.'; then
+    if echo "$arg" | grep -q '\.\.'; then
 	range="$arg"
     else
 	range="$arg^..$arg"
