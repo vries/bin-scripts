@@ -141,10 +141,13 @@ get_changelog_for_log_hunk ()
 	cat "$hunk"
 	echo please enter changelog directory, f.i. ., or gcc, or gcc/testsuite
 	read dir
-	if [ -f "$pwd/$dir/ChangeLog" ]; then
+	if [ "$dir" != "" ] \
+	    && [ -d "$pwd/$dir" ] \
+	    && [ -f "$pwd/$dir/ChangeLog" ]; then
 	    changelog="$dir/ChangeLog"
 	fi
     done
+    echo Using changelog: $changelog
 }
 
 prepend_file ()
