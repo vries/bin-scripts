@@ -100,12 +100,12 @@ find_changelog_for_log_hunk ()
 		base=$(echo "$base" \
 		    | sed 's%/$%%')
 	    fi
-	    if [ -f "$pwd/$base/ChangeLog" ]; then
+	    if [ -f "$pwd/$base/$changelogname" ]; then
 		if [ "$changelog" = "" ]; then
-		    changelog="$base/ChangeLog"
+		    changelog="$base/$changelogname"
 		else
-		    if [ "$changelog" != "$base/ChangeLog" ]; then
-			echo "More than one changelog for hunk: $changelog and $base/ChangeLog"
+		    if [ "$changelog" != "$base/$changelogname" ]; then
+			echo "More than one changelog for hunk: $changelog and $base/$changelogname"
 			changelog=""
 			break
 		    fi
@@ -137,14 +137,14 @@ get_changelog_for_log_hunk ()
     find_changelog_for_log_hunk "$hunk" "$files"
 
     while [ "$changelog" = "" ]; do
-	echo Could not find ChangeLog for log hunk:
+	echo Could not find $changelogname for log hunk:
 	cat "$hunk"
 	echo please enter changelog directory, f.i. ., or gcc, or gcc/testsuite
 	read dir
 	if [ "$dir" != "" ] \
 	    && [ -d "$pwd/$dir" ] \
-	    && [ -f "$pwd/$dir/ChangeLog" ]; then
-	    changelog="$dir/ChangeLog"
+	    && [ -f "$pwd/$dir/$changelogname" ]; then
+	    changelog="$dir/$changelogname"
 	fi
     done
     echo Using changelog: $changelog
@@ -320,8 +320,12 @@ inspect_range ()
 
 main ()
 {
-    local arg="$1"
+    if [ "$1" = "-c" ]; then
+	changelogname="$2"
+	shift 2
+    fi
 
+    local arg="$1"
     local range
     if echo "$arg" | grep -q '\.\.'; then
 	range="$arg"
