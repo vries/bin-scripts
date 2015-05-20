@@ -117,7 +117,8 @@ usage ()
 
 list_tools ()
 {
-    echo gnulib tools: $($gnulibtool --list | grep -v '/')
+    echo gnulib tools: $($gnulibtool --list \
+	| grep -v '/')
 }
 
 main ()
