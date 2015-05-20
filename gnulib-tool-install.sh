@@ -121,6 +121,17 @@ list_tools ()
 	| grep -v '/')
 }
 
+is_tool ()
+{
+    local tool="$1"
+    if $gnulibtool --list \
+	| grep -q "^$tool$" ; then
+	return 0
+    fi
+
+    return 1
+}
+
 main ()
 {
     gnulibtool=$(find_gnulibtool)
@@ -128,13 +139,14 @@ main ()
     if [ $# -ne 1 ]; then
 	usage
     fi
+    local tool="$1"
 
-    if ! $gnulibtool --list | grep -q "^$1$" ; then
+    if ! is_tool "$tool"; then
 	list_tools
 	usage
     fi
 
-    do_tool "$1"
+    do_tool "$tool"
 }
 
 main "$@"
