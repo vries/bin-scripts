@@ -126,16 +126,16 @@ main ()
 
     gnulibtool=$(find_gnulibtool "$tmpdir")
 
-    if [ $# -eq 1 ]; then
-	if $gnulibtool --list | grep -q "^$1$" ; then
-	    do_tool "$1"
-	else
-	    list_tools
-	    usage
-	fi
-    else
+    if [ $# -ne 1 ]; then
 	usage
     fi
+
+    if ! $gnulibtool --list | grep -q "^$1$" ; then
+	list_tools
+	usage
+    fi
+
+    do_tool "$1"
 }
 
 main "$@"
