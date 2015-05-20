@@ -21,8 +21,6 @@ mark_for_cleanup ()
 
 find_gnulibtool ()
 {
-    local tmpdir="$1"
-
     local f=gnulib-tool
     local systemdir=/usr/bin
     if [ -f "$systemdir/$f" ]; then
@@ -35,6 +33,10 @@ find_gnulibtool ()
 	echo "$systemdir/$f"
 	return
     fi
+
+    local tmpdir
+    tmpdir=$(mktemp -d)
+    mark_for_cleanup "$tmpdir"
 
     (
 	cd "$tmpdir"
@@ -120,11 +122,7 @@ list_tools ()
 
 main ()
 {
-    local tmpdir
-    tmpdir=$(mktemp -d)
-    mark_for_cleanup "$tmpdir"
-
-    gnulibtool=$(find_gnulibtool "$tmpdir")
+    gnulibtool=$(find_gnulibtool)
 
     if [ $# -ne 1 ]; then
 	usage
