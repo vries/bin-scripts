@@ -131,7 +131,7 @@ do_tool ()
 	    git config --global merge.merge-changelog.name \
 		"GNU-style ChangeLog merge driver"
 	    git config --global merge.merge-changelog.driver \
-		"/usr/local/bin/git-merge-changelog %O %A %B"
+		"$systemdir/$tool %O %A %B"
 	    if [ -d .git ]; then
 		# local settings
 		add_setting ".git/info/attributes" \
