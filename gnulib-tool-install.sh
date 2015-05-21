@@ -50,17 +50,17 @@ find_gnulib ()
 
     if [ -f "$systembindir/$f" ] \
 	&& [ -d "$systemlibdir/$d" ]; then
-	 "$systemdir/$f"
 	 gnulibtool="$systembindir/$f"
 	 gnulib="$systemlibdir/$d"
+	 return
     fi
 
     sudo apt-get install gnulib
     if [ -f "$systembindir/$f" ] \
 	&& [ -d "$systemlibdir/$d" ]; then
-	 "$systemdir/$f"
 	 gnulibtool="$systembindir/$f"
 	 gnulib="$systemlibdir/$d"
+	 return
     fi
 
     local tmpdir
