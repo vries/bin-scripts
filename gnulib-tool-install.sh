@@ -120,7 +120,8 @@ add_setting ()
     local f="$1"
     local line="$2"
 
-    if grep -q "$line" "$f"; then
+    if [ -f "$f" ] \
+	&& grep -q "$line" "$f"; then
 	return
     fi
 
