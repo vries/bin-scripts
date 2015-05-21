@@ -76,7 +76,7 @@ find_gnulib ()
     gnulibtool="$gnulib/$f"
 }
 
-do_install ()
+do_build_install ()
 {
     local tool="$1"
 
@@ -103,6 +103,18 @@ do_install ()
     )
 }
 
+do_install ()
+{
+    local tool="$1"
+
+    if [ -f "$gnulib/build-aux/$tool" ]; then
+	sudo cp "$gnulib/build-aux/$tool" "$systemdir"
+	return
+    fi
+
+    do_build_install "$tool"
+}
+
 add_setting ()
 {
     local f="$1"
@@ -120,7 +132,7 @@ do_tool ()
 {
     local tool="$1"
 
-    local systemdir="/usr/local/bin/"
+    systemdir="/usr/local/bin/"
     if [ ! -f "$systemdir/$tool" ]; then
 	do_install "$tool"
     fi
