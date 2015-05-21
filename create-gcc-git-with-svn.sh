@@ -4,7 +4,7 @@ set -e
 
 # based on https://gcc.gnu.org/wiki/GitMirror
 
-# create-git-with-svn --user vries --alternate /home/vries/gcc_versions/devel/src --branch gomp-4_0-branch
+# create-gcc-git-with-svn.sh --user vries --alternate /home/vries/gcc_versions/devel/src --branch gomp-4_0-branch
 
 while [ $# -ne 0 ]; do
     case "$1" in
@@ -22,6 +22,8 @@ while [ $# -ne 0 ]; do
 	    ;;
 	*)
 	    exit 1
+	    ;;
+    esac
 done
 
 if [ "$alternate" != "" ]; then
