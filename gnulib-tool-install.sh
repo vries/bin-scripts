@@ -40,19 +40,27 @@ mark_to_keep ()
     keeps="$keeps $f"
 }
 
-find_gnulibtool ()
+find_gnulib ()
 {
     local f=gnulib-tool
-    local systemdir=/usr/bin
-    if [ -f "$systemdir/$f" ]; then
-	echo "$systemdir/$f"
-	return
+    local d=gnulib
+
+    local systembindir=/usr/bin
+    local systemlibdir=/usr/share
+
+    if [ -f "$systembindir/$f" ] \
+	&& [ -d "$systemlibdir/$d" ]; then
+	 "$systemdir/$f"
+	 gnulibtool="$systembindir/$f"
+	 gnulib="$systemlibdir/$d"
     fi
 
     sudo apt-get install gnulib
-    if [ -f "$systemdir/$f" ]; then
-	echo "$systemdir/$f"
-	return
+    if [ -f "$systembindir/$f" ] \
+	&& [ -d "$systemlibdir/$d" ]; then
+	 "$systemdir/$f"
+	 gnulibtool="$systembindir/$f"
+	 gnulib="$systemlibdir/$d"
     fi
 
     local tmpdir
@@ -64,8 +72,8 @@ find_gnulibtool ()
 	git clone git://git.savannah.gnu.org/gnulib.git
     )
 
-    local localdir="$tmpdir/gnulib"
-    echo "$localdir/$f"
+    gnulib="$tmpdir/gnulib"
+    gnulibtool="$gnulib/$f"
 }
 
 do_install ()
@@ -159,7 +167,7 @@ is_tool ()
 
 main ()
 {
-    gnulibtool=$(find_gnulibtool)
+    find_gnulib
 
     keep=false
     if [ "$1" = "--keep" ]; then
