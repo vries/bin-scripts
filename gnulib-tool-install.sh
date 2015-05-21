@@ -6,17 +6,38 @@ set -e
 
 cleanup ()
 {
-    rm -Rf $cleanups
+
+    if [ "$cleanups" != "" ]; then
+	rm -Rf $cleanups
+    fi
+
+    if [ "$keeps" != "" ]; then
+	echo "Kept dirs: $keeps"
+    fi
+}
+
+install_cleanup ()
+{
+    trap "cleanup" 0
+    trap "cleanup; exit 1" 1 2 3 5 9 13 15
 }
 
 mark_for_cleanup ()
 {
     local f="$1"
 
-    trap "cleanup" 0
-    trap "cleanup; exit 1" 1 2 3 5 9 13 15
+    install_cleanup
 
     cleanups="$cleanups $f"
+}
+
+mark_to_keep ()
+{
+    local f="$1"
+
+    install_cleanup
+
+    keeps="$keeps $f"
 }
 
 find_gnulibtool ()
@@ -53,7 +74,11 @@ do_install ()
 
     local dir
     dir=$(mktemp -d)
-    mark_for_cleanup "$dir"
+    if ! $keep; then
+	mark_for_cleanup "$dir"
+    else
+	mark_to_keep "$dir"
+    fi
 
     local builddir="$dir/build"
 
@@ -135,6 +160,12 @@ is_tool ()
 main ()
 {
     gnulibtool=$(find_gnulibtool)
+
+    keep=false
+    if [ "$1" = "--keep" ]; then
+	keep=true
+	shift
+    fi
 
     if [ $# -ne 1 ]; then
 	usage
