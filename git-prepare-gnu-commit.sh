@@ -173,8 +173,9 @@ add_log_hunk ()
 {
     local header="$1"
     local preamble="$2"
-    local hunk="$3"
-    local changelog="$4"
+    local subheader="$3"
+    local hunk="$4"
+    local changelog="$5"
 
     local partial_log
     partial_log=$(mktemp)
@@ -185,6 +186,12 @@ add_log_hunk ()
 	>> "$partial_log"
     cat "$preamble" \
 	>> "$partial_log"
+    if [ -s "$subheader" ]; then
+	cat "$subheader" \
+	    >> "$partial_log"
+	echo \
+	    >> "$partial_log"
+    fi
     cat "$hunk" \
 	>> "$partial_log"
     echo \
@@ -200,11 +207,12 @@ do_log_hunk ()
 {
     local header="$1"
     local preamble="$2"
-    local hunk="$3"
-    local files="$4"
+    local subheader="$3"
+    local hunk="$4"
+    local files="$5"
 
     get_changelog_for_log_hunk "$hunk" "$files"
-    add_log_hunk "$header" "$preamble" "$hunk" "$changelog"
+    add_log_hunk "$header" "$preamble" "$subheader" "$hunk" "$changelog"
 }
 
 distribute_log ()
@@ -216,10 +224,13 @@ distribute_log ()
     header=$(mktemp)
     local preamble
     preamble=$(mktemp)
+    local subheader
+    subheader=$(mktemp)
     local hunk
     hunk=$(mktemp)
 
     local found_hunk=false
+    local found_subheader=false
 
     local in_header=true
     exec 3< "$log"
@@ -234,7 +245,9 @@ distribute_log ()
 	    fi
 	else
 	    if [ "$line" = "" ]; then
-		do_log_hunk "$header" "$preamble" "$hunk" "$files"
+		if [ -s "$hunk" ]; then
+		    do_log_hunk "$header" "$preamble" "$subheader" "$hunk" "$files"
+		fi
 		echo -n \
 		    > "$hunk"
 	    else
@@ -245,18 +258,24 @@ distribute_log ()
 		    echo "$line" \
 			>> "$hunk"
 		else
-		    echo "$line" \
-			>> "$preamble"
+		    if echo "$line" \
+			| egrep -i -q '^[	][0-9][0-9][0-9][0-9]'; then
+			echo "$line" \
+			    > "$subheader"
+		    else
+			echo "$line" \
+			    >> "$preamble"
+		    fi
 		fi
 	    fi
 	fi
     done
 
     if [ -s "$hunk" ]; then
-	do_log_hunk "$header" "$preamble" "$hunk" "$files"
+	do_log_hunk "$header" "$preamble" "$subheader" "$hunk" "$files"
     fi
 
-    rm -f "$header" "$preamble" "$hunk"
+    rm -f "$header" "$preamble" "$subheader" "$hunk"
 }
 
 distribute_commit_log ()
