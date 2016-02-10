@@ -1,0 +1,7 @@
+#!/bin/sh
+
+sessions=$(screen -list 2>&1 | grep Attached | awk '{print $1}')
+echo sessions: $sessions
+for session in $sessions; do
+    screen -d $session
+done
