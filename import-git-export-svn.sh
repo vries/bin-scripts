@@ -31,7 +31,7 @@ git checkout $branch
 git reset --hard svn/$branch
 
 # Get the latest remote objects
-git pull || true
+git pull --prune || true
 
 # Rebase on top of the latest remote changes
 git svn rebase
