@@ -9,8 +9,8 @@ rep="$1"
 branch="$2"
 
 # Fetch the commit-master and base branch
-git fetch $rep commit-$branch
-git fetch $rep $branch
+git fetch -p $rep commit-$branch
+git fetch -p $rep $branch
 
 commits=$(git log --pretty=%H $rep/$branch..$rep/commit-$branch)
 touch ../RECENT_COMMITS
