@@ -87,10 +87,10 @@ find_changelog_for_log_hunk ()
 
     for hf in $hunkfiles; do
 	local matches
-	matches=$(grep -c "$hf" "$files" || true)
+	matches=$(grep -F -c "$hf" "$files" || true)
 	if [ $matches -eq 1 ]; then
 	    local f
-	    f=$(grep "$hf" "$files")
+	    f=$(grep -F "$hf" "$files")
 	    local base
 	    base=$(echo $f \
 		| sed "s%$hf%%")
@@ -120,7 +120,8 @@ find_changelog_for_log_hunk ()
 	    changelog=""
 	    break
 	else
-	    echo "More than one match found for hunkfile $hf in patch files"
+	    echo "More than one match found for hunkfile $hf in patch files:"
+	    grep "$hf" "$files"
 	    changelog=""
 	    break
 	fi
