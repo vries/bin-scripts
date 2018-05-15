@@ -331,7 +331,7 @@ inspect_range ()
 	git show "$c" $changelogs \
 	    >> "$tmp"
 
-	$EDITOR "$tmp"
+	eval $EDITOR "$tmp"
     done
 
     rm -f "$tmp"
