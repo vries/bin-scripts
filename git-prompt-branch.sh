@@ -24,11 +24,12 @@ usage ()
 get_branch ()
 {
     local prompt="$1"
+    local branch_opts="$2"
 
     local tmp
     tmp=$(mktemp)
 
-    git branch \
+    git branch $branch_opts \
 	> "$tmp"
 
     local nlines
@@ -82,18 +83,21 @@ get_branch ()
 main ()
 {        
     local prompt="$1"
-    if [ "$#" -eq 2 ]; then
+    if [ "$#" -ge 2 ]; then
 	local dir="$2"
 	if ! cd "$dir"; then
 	    usage
 	    exit 1
 	fi
+    if [ "$#" -eq 3 ]; then
+	branch_opts="$3"
+    fi
     elif [ "$#" -ne 1 ]; then
 	usage
 	exit 1
     fi
 
-    get_branch "$prompt"
+    get_branch "$prompt" ${branch_opts:+"$branch_opts"}
 }
 
 main "$@"
