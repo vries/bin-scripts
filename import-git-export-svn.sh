@@ -3,10 +3,14 @@
 set -e
 
 # script to cherry-pick range $branch..commit-$branch from repository $rep
-# to local branch $branch, and commit to the underlying svn repository
+# to local branch $lbranch, and commit to the underlying svn repository
 
 rep="$1"
 branch="$2"
+lbranch="$3"
+if [ "$lbranch" = "" ]; then
+    lbranch="$branch"
+fi
 
 # Fetch the commit-master and base branch
 git fetch -p $rep commit-$branch
@@ -27,8 +31,8 @@ for c in $commits; do
 done
 
 # Check out the local master branch, and throw away local changes.
-git checkout $branch
-git reset --hard svn/$branch
+git checkout $lbranch
+git reset --hard svn/$lbranch
 
 # Get the latest remote objects
 git pull --prune || true
