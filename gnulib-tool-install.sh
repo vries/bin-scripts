@@ -55,7 +55,7 @@ find_gnulib ()
 	 return
     fi
 
-    sudo apt-get install gnulib
+    sudo apt-get install gnulib || true
     if [ -f "$systembindir/$f" ] \
 	&& [ -d "$systemlibdir/$d" ]; then
 	 gnulibtool="$systembindir/$f"
