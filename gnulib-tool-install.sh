@@ -108,7 +108,7 @@ do_install ()
     local tool="$1"
 
     if [ -f "$gnulib/build-aux/$tool" ]; then
-	sudo cp "$gnulib/build-aux/$tool" "$systemdir"
+	sudo cp "$gnulib/build-aux/$tool" "$systemdir/"
 	return
     fi
 
@@ -133,7 +133,7 @@ do_tool ()
 {
     local tool="$1"
 
-    systemdir="/usr/local/bin/"
+    systemdir="/usr/local/bin"
     if [ ! -f "$systemdir/$tool" ]; then
 	do_install "$tool"
     fi
