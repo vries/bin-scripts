@@ -353,6 +353,7 @@ inspect_range ()
 main ()
 {
     debug=false
+    changelogname=ChangeLog
     while [ $# -gt 0]; do
 	if [ "$1" = "-c" ]; then
 	    changelogname="$2"
