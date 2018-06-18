@@ -273,6 +273,18 @@ distribute_log ()
     done
 
     if [ -s "$hunk" ]; then
+	if $debug; then
+	    echo HEADER:
+	    cat $header
+	    echo PREAMBLE:
+	    cat $preamble
+	    echo SUBHEADER:
+	    cat $subheader
+	    echo HUNK:
+	    cat $hunk
+	    echo FILES:
+	    cat $files
+	fi
 	do_log_hunk "$header" "$preamble" "$subheader" "$hunk" "$files"
     fi
 
@@ -340,10 +352,18 @@ inspect_range ()
 
 main ()
 {
-    if [ "$1" = "-c" ]; then
-	changelogname="$2"
-	shift 2
-    fi
+    debug=false
+    while [ $# -gt 0]; do
+	if [ "$1" = "-c" ]; then
+	    changelogname="$2"
+	    shift 2
+	    continue
+	elif [ "$1" = "-d" ]; then
+	    debug=true
+	else
+	    break
+	fi
+    done
 
     local arg="$1"
     local range
