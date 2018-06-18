@@ -229,12 +229,19 @@ distribute_log ()
     subheader=$(mktemp)
     local hunk
     hunk=$(mktemp)
+    local log2
+    log2=$(mktemp)
 
     local found_hunk=false
     local found_subheader=false
 
+    awk '/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/{p=1};
+         //{if (p) { print $0; }}
+	' \
+	"$log" \
+	> "$log2"
     local in_header=true
-    exec 3< "$log"
+    exec 3< "$log2"
     while IFS='' read -u 3 line; do
 	if $in_header; then
 	    if [ "$line" = "" ]; then
