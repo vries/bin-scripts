@@ -361,7 +361,7 @@ main ()
 {
     debug=false
     changelogname=ChangeLog
-    while [ $# -gt 0]; do
+    while [ $# -gt 0 ]; do
 	if [ "$1" = "-c" ]; then
 	    changelogname="$2"
 	    shift 2
